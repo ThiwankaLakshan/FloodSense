@@ -1,5 +1,7 @@
 const express = require('express');
 const cors = require('cors');
+const scheduler = require('./services/scheduler');
+const { timeStamp } = require('console');
 require('dotenv').config();
 
 const app = express();
@@ -11,10 +13,23 @@ app.use(express.json());
 
 // Test route
 app.get('/', (req, res) => {
-  res.json({ message: 'Flood Alert System API - Running!' });
+  res.json({ 
+    message: 'Flood Alert System API',
+    status: 'running',
+    timestamp: new Date()
+   });
 });
+
+//health check route
+app.get('/health', (req, res) => {
+  res.json({ status: 'healthy' });
+});
+
+//start scheduler
+scheduler.start();
 
 // Start server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+  console.log(`Weather data collection active`);
 });
